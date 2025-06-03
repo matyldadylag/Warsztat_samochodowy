@@ -1,4 +1,11 @@
+using Microsoft.EntityFrameworkCore;
+using Warsztat_samochodowy.Data;
+using Warsztat_samochodowy.Models;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<WorkshopDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
