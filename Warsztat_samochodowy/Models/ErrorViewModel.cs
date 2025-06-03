@@ -1,6 +1,6 @@
 namespace Warsztat_samochodowy.Models
 {
-    public class ErrorView
+    public class ErrorViewModel
     {
         public string? RequestId { get; set; }
 

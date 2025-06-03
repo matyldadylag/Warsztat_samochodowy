@@ -9,18 +9,18 @@ namespace Warsztat_samochodowy.Data
             : base(options)
         {
         }
-        public DbSet<Customer> Customers => Set<Customer>();
-        public DbSet<Vehicle> Vehicles => Set<Vehicle>();
-        public DbSet<ServiceOrder> ServiceOrders => Set<ServiceOrder>();
-        public DbSet<ServiceTask> ServiceTasks => Set<ServiceTask>();
-        public DbSet<Part> Parts => Set<Part>();
-        public DbSet<UsedPart> UsedParts => Set<UsedPart>();
-        public DbSet<Comment> Comments => Set<Comment>();
+        public DbSet<CustomerModel> Customers => Set<CustomerModel>();
+        public DbSet<VehicleModel> Vehicles => Set<VehicleModel>();
+        public DbSet<ServiceOrderModel> ServiceOrders => Set<ServiceOrderModel>();
+        public DbSet<ServiceTaskModel> ServiceTasks => Set<ServiceTaskModel>();
+        public DbSet<PartModel> Parts => Set<PartModel>();
+        public DbSet<UsedPartModel> UsedParts => Set<UsedPartModel>();
+        public DbSet<CommentModel> Comments => Set<CommentModel>();
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Part>()
+            modelBuilder.Entity<PartModel>()
                 .Property(p => p.UnitPrice)
                 .HasPrecision(18, 2); // or (10, 2) depending on your needs
         }
