@@ -25,5 +25,36 @@ namespace Warsztat_samochodowy.Controllers
 
             return View(customers);
         }
+        // GET: Customer/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Customer/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(CustomerCreateDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            var customer = new CustomerModel
+            {
+                Id = Guid.NewGuid(),
+                FullName = dto.FullName,
+                Email = dto.Email,
+                PhoneNumber = dto.PhoneNumber,
+                Vehicles = new List<VehicleModel>()
+            };
+
+            _context.Customers.Add(customer);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
     }
 }
