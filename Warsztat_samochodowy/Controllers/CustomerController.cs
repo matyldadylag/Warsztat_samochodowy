@@ -13,9 +13,26 @@ namespace Warsztat_samochodowy.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string searchString)
         {
-            var customers = _context.Customers
+            var query = _context.Customers.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                // Rozbijamy wyszukiwanie na części (np. "Jan Kowalski" → ["Jan", "Kowalski"])
+                var searchParts = searchString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+                query = query.Where(c =>
+                    // Każde słowo z wyszukiwania musi występować albo w imieniu, albo w nazwisku
+                    searchParts.All(part =>
+                        c.FirstName.Contains(part) ||
+                        c.LastName.Contains(part))
+                    // Dodatkowo można wyszukiwać cały string w emailu lub telefonie
+                    || c.Email.Contains(searchString)
+                    || c.PhoneNumber.Contains(searchString));
+            }
+
+            var customers = query
                 .Select(c => new CustomerListDto
                 {
                     Id = c.Id,
