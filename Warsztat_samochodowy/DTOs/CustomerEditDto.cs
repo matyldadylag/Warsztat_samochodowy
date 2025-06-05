@@ -1,6 +1,6 @@
 ﻿namespace Warsztat_samochodowy.DTOs
 {
-    public class CustomerListDto
+    public class CustomerEditDto
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; } = default!;

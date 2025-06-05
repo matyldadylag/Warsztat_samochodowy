@@ -11,6 +11,9 @@
         <tr>
             <th>ID</th>
             <th>Imię i nazwisko</th>
+            <th>Email</th>
+            <th>Telefon</th>
+            <th>Akcje</th>
         </tr>
     </thead>
     <tbody>
@@ -18,11 +21,18 @@
         {
             <tr>
                 <td>@customer.Id</td>
-                <td>@customer.FullName</td>
+                <td>@customer.FirstName @customer.LastName</td>
+                <td>@customer.Email</td>
+                <td>@customer.PhoneNumber</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@customer.Id" class="btn btn-sm btn-warning">Edytuj</a>
+                    <a asp-action="Delete" asp-route-id="@customer.Id" class="btn btn-sm btn-danger">Usuń</a>
+                </td>
             </tr>
         }
     </tbody>
-    <p>
-        <a asp-action="Create" class="btn btn-success">Dodaj nowego klienta</a>
-    </p>
 </table>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Dodaj nowego klienta</a>
+</p>

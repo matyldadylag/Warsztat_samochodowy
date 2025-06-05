@@ -1,0 +1,20 @@
+﻿@model Warsztat_samochodowy.Models.CustomerModel
+
+@{
+    ViewData["Title"] = "Usuń klienta";
+}
+
+<h2>Czy na pewno chcesz usunąć klienta?</h2>
+
+<div>
+    @Model.FirstName<br />
+    @Model.LastName<br />
+    @Model.Email<br />
+    @Model.PhoneNumber
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Usuń</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>

@@ -1,12 +1,14 @@
-﻿@model Warsztat_samochodowy.DTOs.CustomerCreateDto
+﻿@model Warsztat_samochodowy.DTOs.CustomerEditDto
 
 @{
-    ViewData["Title"] = "Dodaj klienta";
+    ViewData["Title"] = "Edytuj klienta";
 }
 
-<h2>Dodaj klienta</h2>
+<h2>Edytuj klienta</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
     <div class="form-group">
         <label asp-for="FirstName"></label>
         <input asp-for="FirstName" class="form-control" />
@@ -30,11 +32,5 @@
         <span asp-validation-for="PhoneNumber" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Dodaj</button>
+    <button type="submit" class="btn btn-primary">Zapisz</button>
 </form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

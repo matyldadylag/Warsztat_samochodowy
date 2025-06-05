@@ -12,20 +12,20 @@ using Warsztat_samochodowy.Data;
 namespace Warsztat_samochodowy.Migrations
 {
     [DbContext(typeof(WorkshopDbContext))]
-    [Migration("20250603182659_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250605120845_CustomerModelUpdate")]
+    partial class CustomerModelUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.5")
+                .HasAnnotation("ProductVersion", "8.0.16")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.Comment", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.CommentModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -37,7 +37,8 @@ namespace Warsztat_samochodowy.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<Guid>("ServiceOrderId")
                         .HasColumnType("uniqueidentifier");
@@ -52,7 +53,7 @@ namespace Warsztat_samochodowy.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.Customer", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.CustomerModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,9 +63,15 @@ namespace Warsztat_samochodowy.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
@@ -75,7 +82,7 @@ namespace Warsztat_samochodowy.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.Part", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.PartModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -83,7 +90,8 @@ namespace Warsztat_samochodowy.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<decimal>("UnitPrice")
                         .HasPrecision(18, 2)
@@ -94,14 +102,15 @@ namespace Warsztat_samochodowy.Migrations
                     b.ToTable("Parts");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceOrder", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceOrderModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("AssignedMechanic")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -119,7 +128,7 @@ namespace Warsztat_samochodowy.Migrations
                     b.ToTable("ServiceOrders");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceTask", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceTaskModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,7 +136,8 @@ namespace Warsztat_samochodowy.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<decimal>("LaborCost")
                         .HasColumnType("decimal(18,2)");
@@ -142,7 +152,7 @@ namespace Warsztat_samochodowy.Migrations
                     b.ToTable("ServiceTasks");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.UsedPart", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.UsedPartModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -166,7 +176,7 @@ namespace Warsztat_samochodowy.Migrations
                     b.ToTable("UsedParts");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.Vehicle", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.VehicleModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -177,19 +187,23 @@ namespace Warsztat_samochodowy.Migrations
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("LicensePlate")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Make")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Model")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -198,9 +212,9 @@ namespace Warsztat_samochodowy.Migrations
                     b.ToTable("Vehicles");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.Comment", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.CommentModel", b =>
                 {
-                    b.HasOne("Warsztat_samochodowy.Models.ServiceOrder", "ServiceOrder")
+                    b.HasOne("Warsztat_samochodowy.Models.ServiceOrderModel", "ServiceOrder")
                         .WithMany("Comments")
                         .HasForeignKey("ServiceOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -209,9 +223,9 @@ namespace Warsztat_samochodowy.Migrations
                     b.Navigation("ServiceOrder");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceOrder", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceOrderModel", b =>
                 {
-                    b.HasOne("Warsztat_samochodowy.Models.Vehicle", "Vehicle")
+                    b.HasOne("Warsztat_samochodowy.Models.VehicleModel", "Vehicle")
                         .WithMany()
                         .HasForeignKey("VehicleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -220,9 +234,9 @@ namespace Warsztat_samochodowy.Migrations
                     b.Navigation("Vehicle");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceTask", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceTaskModel", b =>
                 {
-                    b.HasOne("Warsztat_samochodowy.Models.ServiceOrder", "ServiceOrder")
+                    b.HasOne("Warsztat_samochodowy.Models.ServiceOrderModel", "ServiceOrder")
                         .WithMany("Tasks")
                         .HasForeignKey("ServiceOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -231,15 +245,15 @@ namespace Warsztat_samochodowy.Migrations
                     b.Navigation("ServiceOrder");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.UsedPart", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.UsedPartModel", b =>
                 {
-                    b.HasOne("Warsztat_samochodowy.Models.Part", "Part")
+                    b.HasOne("Warsztat_samochodowy.Models.PartModel", "Part")
                         .WithMany()
                         .HasForeignKey("PartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Warsztat_samochodowy.Models.ServiceTask", "ServiceTask")
+                    b.HasOne("Warsztat_samochodowy.Models.ServiceTaskModel", "ServiceTask")
                         .WithMany("UsedParts")
                         .HasForeignKey("ServiceTaskId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -250,9 +264,9 @@ namespace Warsztat_samochodowy.Migrations
                     b.Navigation("ServiceTask");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.Vehicle", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.VehicleModel", b =>
                 {
-                    b.HasOne("Warsztat_samochodowy.Models.Customer", "Customer")
+                    b.HasOne("Warsztat_samochodowy.Models.CustomerModel", "Customer")
                         .WithMany("Vehicles")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -261,19 +275,19 @@ namespace Warsztat_samochodowy.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.Customer", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.CustomerModel", b =>
                 {
                     b.Navigation("Vehicles");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceOrder", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceOrderModel", b =>
                 {
                     b.Navigation("Comments");
 
                     b.Navigation("Tasks");
                 });
 
-            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceTask", b =>
+            modelBuilder.Entity("Warsztat_samochodowy.Models.ServiceTaskModel", b =>
                 {
                     b.Navigation("UsedParts");
                 });
