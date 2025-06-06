@@ -1,0 +1,59 @@
+﻿@model Warsztat_samochodowy.Models.CustomerModel
+
+@{
+    ViewData["Title"] = "Szczegóły klienta";
+}
+
+<h2>Szczegóły klienta</h2>
+
+<div>
+    <h4>@Model.FirstName @Model.LastName</h4>
+    <dl class="row">
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
+
+        <dt class="col-sm-2">Telefon</dt>
+        <dd class="col-sm-10">@Model.PhoneNumber</dd>
+    </dl>
+</div>
+
+<h3>Pojazdy klienta</h3>
+
+@if (Model.Vehicles != null && Model.Vehicles.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Marka</th>
+                <th>Model</th>
+                <th>Numer rejestracyjny</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var vehicle in Model.Vehicles)
+            {
+                <tr>
+                    <td>@vehicle.Make</td>
+                    <td>@vehicle.Model</td>
+                    <td>@vehicle.LicensePlate</td>
+                    <td>
+                        <a asp-controller="Vehicle" asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-sm btn-info">Szczegóły</a>
+                        <a asp-controller="Vehicle" asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-sm btn-warning">Edytuj</a>
+                        <a asp-controller="Vehicle" asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-sm btn-danger">Usuń</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Brak pojazdów przypisanych do tego klienta.</p>
+}
+
+<p>
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edytuj klienta</a>
+    <a asp-action="Index" class="btn btn-secondary">Powrót do listy klientów</a>
+    <a asp-controller="Vehicle" asp-action="Create" asp-route-customerId="@Model.Id" class="btn btn-success">Dodaj pojazd</a>
+</p>

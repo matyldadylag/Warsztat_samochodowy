@@ -37,6 +37,7 @@
                     <a asp-action="Edit" asp-route-id="@customer.Id" class="btn btn-sm btn-warning">Edytuj</a>
                     <a asp-action="Delete" asp-route-id="@customer.Id" class="btn btn-sm btn-danger">Usuń</a>
                     <a asp-controller="Vehicle" asp-action="Create" asp-route-customerId="@customer.Id" class="btn btn-sm btn-primary ml-1">Dodaj pojazd</a>
+                    <a asp-action="Details" asp-route-id="@customer.Id" class="btn btn-sm btn-info">Szczegóły</a>
                 </td>
             </tr>
         }

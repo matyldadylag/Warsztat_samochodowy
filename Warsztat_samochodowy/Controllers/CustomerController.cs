@@ -2,6 +2,7 @@
 using Warsztat_samochodowy.Models;
 using Warsztat_samochodowy.Data;
 using Warsztat_samochodowy.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace Warsztat_samochodowy.Controllers
 {
@@ -119,6 +120,22 @@ namespace Warsztat_samochodowy.Controllers
             _context.Customers.Remove(customer);
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
+        }
+        // GET: Customer/Details/5
+        public IActionResult Details(Guid? id)
+        {
+            if (id == null)
+                return NotFound();
+
+            var customer = _context.Customers
+                .Include(c => c.Vehicles)  // ładowanie pojazdów klienta
+                .FirstOrDefault(c => c.Id == id);
+
+            if (customer == null)
+                return NotFound();
+
+            // Mapowanie na DTO, jeśli masz, albo bezpośrednio model do widoku
+            return View(customer);
         }
     }
 }
