@@ -19,15 +19,12 @@ namespace Warsztat_samochodowy.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                // Rozbijamy wyszukiwanie na części (np. "Jan Kowalski" → ["Jan", "Kowalski"])
                 var searchParts = searchString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
                 query = query.Where(c =>
-                    // Każde słowo z wyszukiwania musi występować albo w imieniu, albo w nazwisku
                     searchParts.All(part =>
                         c.FirstName.Contains(part) ||
                         c.LastName.Contains(part))
-                    // Dodatkowo można wyszukiwać cały string w emailu lub telefonie
                     || c.Email.Contains(searchString)
                     || c.PhoneNumber.Contains(searchString));
             }
@@ -46,10 +43,8 @@ namespace Warsztat_samochodowy.Controllers
             return View(customers);
         }
 
-        // GET: Customer/Create
         public IActionResult Create() => View();
 
-        // POST: Customer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(CustomerCreateDto dto)
@@ -71,7 +66,6 @@ namespace Warsztat_samochodowy.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Customer/Edit/{id}
         public IActionResult Edit(Guid id)
         {
             var customer = _context.Customers.Find(id);
@@ -89,7 +83,6 @@ namespace Warsztat_samochodowy.Controllers
             return View(dto);
         }
 
-        // POST: Customer/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(CustomerEditDto dto)
@@ -108,7 +101,6 @@ namespace Warsztat_samochodowy.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Customer/Delete/{id}
         public IActionResult Delete(Guid id)
         {
             var customer = _context.Customers.Find(id);
@@ -117,7 +109,6 @@ namespace Warsztat_samochodowy.Controllers
             return View(customer);
         }
 
-        // POST: Customer/Delete/{id}
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid id)

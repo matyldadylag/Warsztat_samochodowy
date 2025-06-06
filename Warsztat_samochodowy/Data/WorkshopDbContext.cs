@@ -22,7 +22,7 @@ namespace Warsztat_samochodowy.Data
 
             modelBuilder.Entity<PartModel>()
                 .Property(p => p.UnitPrice)
-                .HasPrecision(18, 2); // or (10, 2) depending on your needs
+                .HasPrecision(18, 2);
         }
     }
 }

@@ -1,0 +1,20 @@
+﻿@model Warsztat_samochodowy.Models.VehicleModel
+
+@{
+    ViewData["Title"] = "Usuń pojazd";
+}
+
+<h2>Czy na pewno chcesz usunąć pojazd?</h2>
+
+<div>
+    <strong>Marka:</strong> @Model.Make <br />
+    <strong>Model:</strong> @Model.Model <br />
+    <strong>Numer rejestracyjny:</strong> @Model.LicensePlate <br />
+    <strong>Klient:</strong> @Model.Customer.FirstName @Model.Customer.LastName
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Usuń</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>

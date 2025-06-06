@@ -1,0 +1,39 @@
+﻿@model List<Warsztat_samochodowy.DTOs.VehicleListDto>
+
+@{
+    ViewData["Title"] = "Lista Pojazdów";
+}
+
+<h2>Lista pojazdów</h2>
+
+<form asp-action="Index" method="get" class="form-inline mb-3">
+    <input type="text" name="searchString" class="form-control mr-2" placeholder="Szukaj pojazdu..." value="@Context.Request.Query["searchString"]" />
+    <button type="submit" class="btn btn-primary">Szukaj</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Marka i model</th>
+            <th>Rejestracja</th>
+            <th>Właściciel</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var vehicle in Model)
+        {
+            <tr>
+                <td>@vehicle.Id</td>
+                <td>@vehicle.Make @vehicle.Model</td>
+                <td>@vehicle.LicensePlate</td>
+                <td>@vehicle.CustomerName</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-sm btn-warning">Edytuj</a>
+                    <a asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-sm btn-danger">Usuń</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

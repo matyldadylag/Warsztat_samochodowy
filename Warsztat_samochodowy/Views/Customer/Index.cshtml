@@ -11,6 +11,10 @@
     <button type="submit" class="btn btn-primary">Szukaj</button>
 </form>
 
+<p>
+    <a asp-action="Create" class="btn btn-success">Dodaj nowego klienta</a>
+</p>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -32,12 +36,9 @@
                 <td>
                     <a asp-action="Edit" asp-route-id="@customer.Id" class="btn btn-sm btn-warning">Edytuj</a>
                     <a asp-action="Delete" asp-route-id="@customer.Id" class="btn btn-sm btn-danger">Usuń</a>
+                    <a asp-controller="Vehicle" asp-action="Create" asp-route-customerId="@customer.Id" class="btn btn-sm btn-primary ml-1">Dodaj pojazd</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<p>
-    <a asp-action="Create" class="btn btn-success">Dodaj nowego klienta</a>
-</p>
