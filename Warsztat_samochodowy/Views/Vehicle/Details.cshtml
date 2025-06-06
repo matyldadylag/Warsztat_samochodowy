@@ -1,0 +1,28 @@
+﻿@model Warsztat_samochodowy.Models.VehicleModel
+
+<h2>Szczegóły pojazdu</h2>
+
+<table class="table">
+    <tr><th>ID</th><td>@Model.Id</td></tr>
+    <tr><th>Marka</th><td>@Model.Make</td></tr>
+    <tr><th>Model</th><td>@Model.Model</td></tr>
+    <tr><th>Rejestracja</th><td>@Model.LicensePlate</td></tr>
+    <tr><th>Właściciel</th><td>@Model.Customer?.FirstName @Model.Customer?.LastName</td></tr>
+    <tr><th>VIN</th><td>@Model.VIN</td></tr>
+    <tr>
+        <th>Zdjęcie</th>
+        <td>
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" alt="Zdjęcie pojazdu" style="max-width:400px" />
+            }
+            else
+            {
+                <p>Brak zdjęcia</p>
+            }
+        </td>
+    </tr>
+</table>
+
+<a asp-action="Index" class="btn btn-secondary">Powrót do listy</a>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Edytuj</a>

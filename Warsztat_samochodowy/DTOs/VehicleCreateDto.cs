@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Http;
 
 namespace Warsztat_samochodowy.DTOs
 {
@@ -21,9 +22,11 @@ namespace Warsztat_samochodowy.DTOs
         public string VIN { get; set; } = default!;
 
         [StringLength(255, ErrorMessage = "Adres URL może mieć maksymalnie 255 znaków")]
-        public string ImageUrl { get; set; } = default!;
+        public string ImageUrl { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "Pole wymagane")]
         public Guid CustomerId { get; set; }
+
+        public IFormFile? ImageFile { get; set; }
     }
 }

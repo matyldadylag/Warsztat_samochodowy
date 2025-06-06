@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Warsztat_samochodowy.DTOs;
-using Warsztat_samochodowy.Models;
-using Warsztat_samochodowy.Data;
 using Microsoft.EntityFrameworkCore;
+using Warsztat_samochodowy.Data;
+using Warsztat_samochodowy.DTOs;
+//using Warsztat_samochodowy.DTOs.Warsztat_samochodowy.DTOs;
+using Warsztat_samochodowy.Models;
 
 namespace Warsztat_samochodowy.Controllers
 {
@@ -65,13 +66,29 @@ namespace Warsztat_samochodowy.Controllers
             if (!ModelState.IsValid)
                 return View(dto);
 
+            string? fileName = null;
+            if (dto.ImageFile != null && dto.ImageFile.Length > 0)
+            {
+                // wygeneruj unikalną nazwę pliku
+                fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.ImageFile.FileName);
+
+                // ścieżka do wwwroot/uploads
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
+
+                // zapisz plik na dysku
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    dto.ImageFile.CopyTo(stream);
+                }
+            }
+
             var vehicle = new VehicleModel
             {
                 Id = Guid.NewGuid(),
                 Make = dto.Make,
                 Model = dto.Model,
                 LicensePlate = dto.LicensePlate,
-                ImageUrl = dto.ImageUrl,
+                ImageUrl = fileName != null ? "/uploads/" + fileName : dto.ImageUrl,
                 CustomerId = dto.CustomerId,
                 VIN = dto.VIN
             };
@@ -108,6 +125,22 @@ namespace Warsztat_samochodowy.Controllers
             if (!ModelState.IsValid)
                 return View(dto);
 
+            string? fileName = null;
+            if (dto.ImageFile != null && dto.ImageFile.Length > 0)
+            {
+                // wygeneruj unikalną nazwę pliku
+                fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.ImageFile.FileName);
+
+                // ścieżka do wwwroot/uploads
+                var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
+
+                // zapisz plik na dysku
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    dto.ImageFile.CopyTo(stream);
+                }
+            }
+
             var vehicle = _context.Vehicles.Find(dto.Id);
             if (vehicle == null)
                 return NotFound();
@@ -115,7 +148,7 @@ namespace Warsztat_samochodowy.Controllers
             vehicle.Make = dto.Make;
             vehicle.Model = dto.Model;
             vehicle.LicensePlate = dto.LicensePlate;
-            vehicle.ImageUrl = dto.ImageUrl;
+            vehicle.ImageUrl = fileName != null ? "/uploads/" + fileName : dto.ImageUrl;
             vehicle.VIN = dto.VIN;
 
             _context.SaveChanges();
@@ -151,5 +184,21 @@ namespace Warsztat_samochodowy.Controllers
 
             return RedirectToAction("Index", "Vehicle", new { id = customerId });
         }
+
+        public IActionResult Details(Guid id)
+        {
+            var vehicle = _context.Vehicles
+                .Include(v => v.Customer)
+                .FirstOrDefault(v => v.Id == id);
+
+            if (vehicle == null)
+                return NotFound();
+
+            return View(vehicle);
+        }
+
+
     }
+
+
 }
