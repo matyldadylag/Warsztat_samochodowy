@@ -18,7 +18,7 @@ namespace Warsztat_samochodowy.DTOs
         public string LicensePlate { get; set; } = default!;
 
         [Required(ErrorMessage = "Numer VIN jest wymagany")]
-        [StringLength(17, ErrorMessage = "VIN musi mieć 17 znaków")]
+        [StringLength(17, MinimumLength = 17, ErrorMessage = "VIN musi mieć 17 znaków")]
         public string VIN { get; set; } = default!;
 
         [StringLength(255, ErrorMessage = "Adres URL może mieć maksymalnie 255 znaków")]
