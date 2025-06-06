@@ -18,6 +18,7 @@
             <th>Marka i model</th>
             <th>Rejestracja</th>
             <th>Właściciel</th>
+            <th>VIN</th>
             <th>Akcje</th>
         </tr>
     </thead>
@@ -29,6 +30,7 @@
                 <td>@vehicle.Make @vehicle.Model</td>
                 <td>@vehicle.LicensePlate</td>
                 <td>@vehicle.CustomerName</td>
+                <td>@vehicle.VIN</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-sm btn-warning">Edytuj</a>
                     <a asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-sm btn-danger">Usuń</a>

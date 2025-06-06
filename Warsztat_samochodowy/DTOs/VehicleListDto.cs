@@ -6,6 +6,7 @@
         public string Make { get; set; } = default!;
         public string Model { get; set; } = default!;
         public string LicensePlate { get; set; } = default!;
+        public string VIN { get; set; } = default!;
         public string CustomerName { get; set; } = default!;
     }
 }

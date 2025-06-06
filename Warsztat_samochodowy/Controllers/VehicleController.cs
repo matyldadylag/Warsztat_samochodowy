@@ -44,7 +44,8 @@ namespace Warsztat_samochodowy.Controllers
                     Make = v.Make,
                     Model = v.Model,
                     LicensePlate = v.LicensePlate,
-                    CustomerName = v.Customer.FirstName + " " + v.Customer.LastName
+                    CustomerName = v.Customer.FirstName + " " + v.Customer.LastName,
+                    VIN = v.VIN
                 })
                 .ToList();
 
@@ -71,7 +72,8 @@ namespace Warsztat_samochodowy.Controllers
                 Model = dto.Model,
                 LicensePlate = dto.LicensePlate,
                 ImageUrl = dto.ImageUrl,
-                CustomerId = dto.CustomerId
+                CustomerId = dto.CustomerId,
+                VIN = dto.VIN
             };
 
             _context.Vehicles.Add(vehicle);
@@ -93,7 +95,8 @@ namespace Warsztat_samochodowy.Controllers
                 Model = vehicle.Model,
                 LicensePlate = vehicle.LicensePlate,
                 ImageUrl = vehicle.ImageUrl,
-                CustomerId = vehicle.CustomerId
+                CustomerId = vehicle.CustomerId,
+                VIN = vehicle.VIN
             };
             return View(dto);
         }
@@ -113,6 +116,7 @@ namespace Warsztat_samochodowy.Controllers
             vehicle.Model = dto.Model;
             vehicle.LicensePlate = dto.LicensePlate;
             vehicle.ImageUrl = dto.ImageUrl;
+            vehicle.VIN = dto.VIN;
 
             _context.SaveChanges();
 
