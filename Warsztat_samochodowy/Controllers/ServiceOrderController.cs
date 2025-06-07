@@ -22,9 +22,8 @@ namespace Warsztat_samochodowy.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                // Szukanie po AssignedMechanic albo po marce/modelu pojazdu
                 query = query.Where(o =>
-                    o.AssignedMechanic != null && o.AssignedMechanic.Contains(searchString) ||
+                    (o.AssignedMechanic != null && o.AssignedMechanic.Contains(searchString)) ||
                     o.Vehicle.Make.Contains(searchString) ||
                     o.Vehicle.Model.Contains(searchString));
             }
@@ -43,6 +42,41 @@ namespace Warsztat_samochodowy.Controllers
                 .ToListAsync();
 
             return View(serviceOrders);
+        }
+
+        // GET: ServiceOrder/Create?vehicleId=...
+        public IActionResult Create(Guid vehicleId)
+        {
+            var dto = new ServiceOrderCreateDto
+            {
+                VehicleId = vehicleId
+            };
+            return View(dto);
+        }
+
+        // POST: ServiceOrder/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ServiceOrderCreateDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            var serviceOrder = new ServiceOrderModel
+            {
+                Id = Guid.NewGuid(),
+                VehicleId = dto.VehicleId,
+                Status = ServiceOrderStatus.New,
+                AssignedMechanic = dto.AssignedMechanic,
+                CreatedAt = DateTime.UtcNow,
+                Comments = new List<CommentModel>(),
+                Tasks = new List<ServiceTaskModel>()
+            };
+
+            _context.ServiceOrders.Add(serviceOrder);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index", "ServiceOrder", new { id = dto.VehicleId });
         }
 
         // GET: ServiceOrder/Details/5

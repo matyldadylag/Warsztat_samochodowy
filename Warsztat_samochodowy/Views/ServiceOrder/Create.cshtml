@@ -1,0 +1,23 @@
+﻿@model Warsztat_samochodowy.DTOs.ServiceOrderCreateDto
+
+@{
+    ViewData["Title"] = "Dodaj zlecenie serwisowe";
+}
+
+<h2>Dodaj zlecenie serwisowe</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="AssignedMechanic"></label>
+        <input asp-for="AssignedMechanic" class="form-control" />
+        <span asp-validation-for="AssignedMechanic" class="text-danger"></span>
+    </div>
+
+    <input type="hidden" asp-for="VehicleId" />
+
+    <button type="submit" class="btn btn-primary">Dodaj</button>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

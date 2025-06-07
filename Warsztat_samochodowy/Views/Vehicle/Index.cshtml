@@ -35,7 +35,9 @@
                     <a asp-action="Edit" asp-route-id="@vehicle.Id" class="btn btn-sm btn-warning">Edytuj</a>
                     <a asp-action="Delete" asp-route-id="@vehicle.Id" class="btn btn-sm btn-danger">Usuń</a>
                     <a asp-action="Details" asp-route-id="@vehicle.Id" class="btn btn-sm btn-info">Szczegóły</a>
-
+                    <a asp-controller="ServiceOrder" asp-action="Create" asp-route-vehicleId="@vehicle.Id" class="btn btn-sm btn-primary">
+                        Dodaj zlecenie serwisowe
+                    </a>
                 </td>
             </tr>
         }
