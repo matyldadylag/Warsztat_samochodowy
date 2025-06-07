@@ -1,0 +1,42 @@
+﻿@model List<Warsztat_samochodowy.DTOs.ServiceOrderListDto>
+
+@{
+    ViewData["Title"] = "Lista Zleceń Serwisowych";
+}
+
+<h2>Lista zleceń serwisowych</h2>
+
+<form asp-action="Index" method="get" class="form-inline mb-3">
+    <input type="text" name="searchString" class="form-control mr-2" placeholder="Szukaj zlecenia..." value="@Context.Request.Query["searchString"]" />
+    <button type="submit" class="btn btn-primary">Szukaj</button>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Status</th>
+            <th>Przypisany mechanik</th>
+            <th>Id pojazdu</th>
+            <th>Data utworzenia</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@order.Status</td>
+                <td>@order.AssignedMechanic</td>
+                <td>@order.VehicleId</td>
+                <td>@order.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@order.Id" class="btn btn-sm btn-warning">Edytuj</a>
+                    <a asp-action="Delete" asp-route-id="@order.Id" class="btn btn-sm btn-danger">Usuń</a>
+                    <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-info">Szczegóły</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

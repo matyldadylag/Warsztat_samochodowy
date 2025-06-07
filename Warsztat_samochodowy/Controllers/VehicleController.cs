@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Warsztat_samochodowy.Data;
 using Warsztat_samochodowy.DTOs;
-//using Warsztat_samochodowy.DTOs.Warsztat_samochodowy.DTOs;
 using Warsztat_samochodowy.Models;
 
 namespace Warsztat_samochodowy.Controllers
