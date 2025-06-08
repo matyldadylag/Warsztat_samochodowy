@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using Warsztat_samochodowy.Data;
 using Warsztat_samochodowy.Models;
+
 
 var builder = WebApplication.CreateBuilder(args);
 

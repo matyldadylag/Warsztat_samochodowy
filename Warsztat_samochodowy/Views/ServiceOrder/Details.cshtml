@@ -6,13 +6,8 @@
 <p><strong>Samochód:</strong> @Model.Vehicle.Make @Model.Vehicle.Model</p>
 <p><strong>Data utworzenia:</strong> @Model.CreatedAt.ToLocalTime()</p>
 
-<h3>Zadania</h3>
-<ul>
-    @foreach (var task in Model.Tasks)
-    {
-        <li>@task.Description</li>
-    }
-</ul>
+
+<a asp-controller="ServiceTask" asp-action="Index" asp-route-orderId="@Model.Id" class="btn btn-primary">Pokaż zadania</a>
 
 <a asp-controller="Comment" asp-action="Index" asp-route-orderId="@Model.Id" class="btn btn-primary">Pokaż komentarze</a>
 
