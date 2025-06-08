@@ -30,6 +30,47 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="ServiceOrder" asp-action="Index">Zlecenia</a>
                         </li>
                     </ul>
+
+                    <ul class="navbar-nav">
+                        @if (User.Identity?.IsAuthenticated ?? false)
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link">Zalogowany jako: @User.Identity.Name</span>
+                            </li>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item">
+                                    <span class="nav-link">(Admin)</span>
+                                </li>
+                            }
+                            else if (User.IsInRole("Recepcjonista"))
+                            {
+                                <li class="nav-item">
+                                    <span class="nav-link">(Recepcjonista)</span>
+                                </li>
+                            }
+                            else if (User.IsInRole("Mechanik"))
+                            {
+                                <li class="nav-item">
+                                    <span class="nav-link">(Mechanik)</span>
+                                </li>
+                            }
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="form-inline">
+                                    <button type="submit" class="btn btn-link nav-link">Wyloguj</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Login">Zaloguj</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Account" asp-action="Register">Rejestracja</a>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
         </nav>
