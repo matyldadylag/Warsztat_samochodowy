@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Warsztat_samochodowy.Data;
 using Warsztat_samochodowy.Models;
+using Warsztat_samochodowy.DTOs;
 
 namespace Warsztat_samochodowy.Controllers
 {
@@ -14,50 +15,62 @@ namespace Warsztat_samochodowy.Controllers
             _context = context;
         }
 
+
         public async Task<IActionResult> Index(Guid orderId)
         {
             var order = await _context.ServiceOrders
                 .Include(o => o.Comments)
-                .Include(o => o.Vehicle)
                 .FirstOrDefaultAsync(o => o.Id == orderId);
 
             if (order == null)
                 return NotFound();
 
-            ViewBag.OrderId = order.Id;
-            ViewBag.OrderTitle = $"{order.Vehicle.Make} {order.Vehicle.Model}";
+            var commentsDto = order.Comments
+                .OrderByDescending(c => c.Timestamp)
+                .Select(c => new CommentListDto
+                {
+                    Id = c.Id,
+                    Author = c.Author,
+                    Content = c.Content,
+                    Timestamp = c.Timestamp
+                })
+                .ToList();
 
-            return View(order.Comments.OrderByDescending(c => c.Timestamp).ToList());
+            ViewData["OrderId"] = order.Id; 
+
+            return View(commentsDto);
         }
+
+
+        public IActionResult Create(Guid orderId)
+        {
+            var dto = new CommentCreateDto
+            {
+                ServiceOrderId = orderId
+            };
+            return View(dto);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(CommentModel comment)
+        public async Task<IActionResult> Create(CommentCreateDto dto)
         {
-            // Wyłącz walidację powiązanego obiektu – bo i tak go przypiszemy ręcznie
-            ModelState.Remove("ServiceOrder");
-
             if (!ModelState.IsValid)
+                return View(dto);
+
+            var comment = new CommentModel
             {
-                var errors = ModelState
-                    .Where(x => x.Value.Errors.Any())
-                    .Select(x => $"{x.Key}: {string.Join(", ", x.Value.Errors.Select(e => e.ErrorMessage))}");
-
-                var errorMessage = "ModelState is invalid:\n" + string.Join("\n", errors);
-                return Content(errorMessage);
-            }
-
-            var order = await _context.ServiceOrders.FindAsync(comment.ServiceOrderId);
-            if (order == null)
-                return NotFound();
-
-            comment.Id = Guid.NewGuid();
-            comment.Timestamp = DateTime.UtcNow;
-            comment.ServiceOrder = order;
+                Id = Guid.NewGuid(),
+                Author = dto.Author,
+                Content = dto.Content,
+                Timestamp = DateTime.UtcNow,
+                ServiceOrderId = dto.ServiceOrderId
+            };
 
             _context.Comments.Add(comment);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Details", "ServiceOrder", new { id = comment.ServiceOrderId });
+            return RedirectToAction("Index", new { orderId = dto.ServiceOrderId });
         }
 
         [HttpPost]
