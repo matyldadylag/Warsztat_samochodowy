@@ -1,0 +1,40 @@
+﻿@model Warsztat_samochodowy.ViewModels.AdminRegisterViewModel
+@{
+    ViewData["Title"] = "Dodaj użytkownika";
+}
+
+<h2>Dodaj użytkownika</h2>
+
+<form asp-action="AdminRegister" method="post">
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        <label asp-for="ConfirmPassword"></label>
+        <input asp-for="ConfirmPassword" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Role">Rola</label>
+        <select asp-for="Role" asp-items="new SelectList(ViewBag.Roles)" class="form-control"></select>
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Utwórz użytkownika</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
