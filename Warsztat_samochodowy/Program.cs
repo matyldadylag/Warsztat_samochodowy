@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using Warsztat_samochodowy.Data;
 using Warsztat_samochodowy.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
