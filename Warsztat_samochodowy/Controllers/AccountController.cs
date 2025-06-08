@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Warsztat_samochodowy.Models;
 using Warsztat_samochodowy.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Warsztat_samochodowy.Controllers
 {
@@ -17,9 +18,11 @@ namespace Warsztat_samochodowy.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Register() => View();
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -41,9 +44,11 @@ namespace Warsztat_samochodowy.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Login() => View();
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
