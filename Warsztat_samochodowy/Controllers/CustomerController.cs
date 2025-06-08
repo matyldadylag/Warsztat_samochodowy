@@ -134,7 +134,6 @@ namespace Warsztat_samochodowy.Controllers
             if (customer == null)
                 return NotFound();
 
-            // Mapowanie na DTO, jeśli masz, albo bezpośrednio model do widoku
             return View(customer);
         }
     }

@@ -173,5 +173,31 @@ namespace Warsztat_samochodowy.Controllers
         {
             return _context.ServiceOrders.Any(e => e.Id == id);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddComment(CommentCreateDto commentDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                // Przy błędzie wróć do Details i pokaż błędy (możesz też przekazać ModelState do widoku)
+                return RedirectToAction(nameof(Details), new { id = commentDto.ServiceOrderId });
+            }
+
+            var comment = new CommentModel
+            {
+                Id = Guid.NewGuid(),
+                ServiceOrderId = commentDto.ServiceOrderId,
+                Author = commentDto.Author,
+                Content = commentDto.Content,
+                Timestamp = DateTime.UtcNow
+            };
+
+            _context.Comments.Add(comment);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id = commentDto.ServiceOrderId });
+        }
+
     }
 }
