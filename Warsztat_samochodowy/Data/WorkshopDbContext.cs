@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Warsztat_samochodowy.Models;
 
 namespace Warsztat_samochodowy.Data
 {
-    public class WorkshopDbContext : DbContext
+    public class WorkshopDbContext : IdentityDbContext<ApplicationUserModel>
     {
         public WorkshopDbContext(DbContextOptions<WorkshopDbContext> options)
             : base(options)
