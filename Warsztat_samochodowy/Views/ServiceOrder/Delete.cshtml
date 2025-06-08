@@ -1,0 +1,25 @@
+﻿@model Warsztat_samochodowy.Models.ServiceOrderModel
+
+@{
+    ViewData["Title"] = "Usuń zlecenie";
+}
+
+<h2>Usuń zlecenie</h2>
+
+<h4>Czy na pewno chcesz usunąć to zlecenie?</h4>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Mechanik</dt>
+        <dd class="col-sm-10">@Model.AssignedMechanic</dd>
+        <dt class="col-sm-2">Status</dt>
+        <dd class="col-sm-10">@Model.Status</dd>
+        <dt class="col-sm-2">Pojazd</dt>
+        <dd class="col-sm-10">@Model.Vehicle.Make @Model.Vehicle.Model</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Usuń</button> |
+    <a asp-action="Index">Anuluj</a>
+</form>

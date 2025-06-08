@@ -17,7 +17,6 @@
             <th>ID</th>
             <th>Status</th>
             <th>Przypisany mechanik</th>
-            <th>Id pojazdu</th>
             <th>Data utworzenia</th>
             <th>Akcje</th>
         </tr>
@@ -29,7 +28,6 @@
                 <td>@order.Id</td>
                 <td>@order.Status</td>
                 <td>@order.AssignedMechanic</td>
-                <td>@order.VehicleId</td>
                 <td>@order.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@order.Id" class="btn btn-sm btn-warning">Edytuj</a>
