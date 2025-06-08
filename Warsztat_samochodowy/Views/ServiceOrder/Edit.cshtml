@@ -1,0 +1,30 @@
+﻿@model Warsztat_samochodowy.DTOs.ServiceOrderEditDto
+
+@{
+    ViewData["Title"] = "Edytuj zlecenie";
+}
+
+<h2>Edytuj zlecenie</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="AssignedMechanic"></label>
+        <input asp-for="AssignedMechanic" class="form-control" />
+        <span asp-validation-for="AssignedMechanic" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <select asp-for="Status" class="form-control" asp-items="Html.GetEnumSelectList<ServiceOrderStatus>()"></select>
+        <span asp-validation-for="Status" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Zapisz</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

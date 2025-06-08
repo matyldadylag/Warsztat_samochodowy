@@ -95,9 +95,9 @@ namespace Warsztat_samochodowy.Controllers
                 return NotFound();
 
             return View(order);
+
         }
 
-        // GET: ServiceOrder/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -107,34 +107,37 @@ namespace Warsztat_samochodowy.Controllers
             if (order == null)
                 return NotFound();
 
-            return View(order);
+            var dto = new ServiceOrderEditDto
+            {
+                Id = order.Id,
+                AssignedMechanic = order.AssignedMechanic,
+                Status = order.Status
+            };
+
+            return View(dto);
         }
 
-        // POST: ServiceOrder/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, ServiceOrderModel updatedOrder)
+        public async Task<IActionResult> Edit(Guid id, ServiceOrderEditDto dto)
         {
-            if (id != updatedOrder.Id)
+            if (id != dto.Id)
                 return NotFound();
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(updatedOrder);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ServiceOrderExists(updatedOrder.Id))
-                        return NotFound();
-                    else
-                        throw;
-                }
-            }
-            return View(updatedOrder);
+            if (!ModelState.IsValid)
+                return View(dto);
+
+            var order = await _context.ServiceOrders.FindAsync(id);
+            if (order == null)
+                return NotFound();
+
+            order.Status = dto.Status;
+            order.AssignedMechanic = dto.AssignedMechanic;
+
+            _context.Update(order);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: ServiceOrder/Delete/5
