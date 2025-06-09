@@ -57,7 +57,7 @@ namespace Warsztat_samochodowy.Controllers
 
             return View(serviceOrders);
         }
-
+    
 
         // GET: ServiceOrder/Create?vehicleId=...
         [HttpGet]
@@ -143,11 +143,19 @@ namespace Warsztat_samochodowy.Controllers
             if (order == null)
                 return NotFound();
 
+            var mechanics = await _userManager.GetUsersInRoleAsync("Mechanik");
+
             var dto = new ServiceOrderEditDto
             {
                 Id = order.Id,
                 AssignedMechanic = order.AssignedMechanic,
-                Status = order.Status
+                Status = order.Status,
+                AvailableMechanics = mechanics.Select(m => new SelectListItem
+                {
+                    Value = m.Email, // lub m.Id — zależnie od tego, co masz w bazie
+                    Text = m.Email,
+                    Selected = m.Email == order.AssignedMechanic
+                })
             };
 
             return View(dto);
@@ -161,7 +169,17 @@ namespace Warsztat_samochodowy.Controllers
                 return NotFound();
 
             if (!ModelState.IsValid)
+            {
+                var mechanics = await _userManager.GetUsersInRoleAsync("Mechanik");
+                dto.AvailableMechanics = mechanics.Select(m => new SelectListItem
+                {
+                    Value = m.Email,
+                    Text = m.Email,
+                    Selected = m.Email == dto.AssignedMechanic
+                });
+
                 return View(dto);
+            }
 
             var order = await _context.ServiceOrders.FindAsync(id);
             if (order == null)
@@ -175,6 +193,7 @@ namespace Warsztat_samochodowy.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
 
         // GET: ServiceOrder/Delete/5
         public async Task<IActionResult> Delete(Guid? id)

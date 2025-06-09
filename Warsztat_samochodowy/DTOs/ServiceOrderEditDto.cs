@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 using Warsztat_samochodowy.Models;
 
 namespace Warsztat_samochodowy.DTOs
@@ -8,9 +9,10 @@ namespace Warsztat_samochodowy.DTOs
         public Guid Id { get; set; }
 
         [Required]
-        public ServiceOrderStatus Status { get; set; }
+        public string AssignedMechanic { get; set; } = default!;
 
-        [StringLength(100, ErrorMessage = "Imię mechanika nie może przekraczać 100 znaków")]
-        public string? AssignedMechanic { get; set; }
+        [Required]
+        public ServiceOrderStatus Status { get; set; }
+        public IEnumerable<SelectListItem>? AvailableMechanics { get; set; }
     }
 }

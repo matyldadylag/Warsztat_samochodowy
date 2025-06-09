@@ -11,7 +11,7 @@
 
     <div class="form-group">
         <label asp-for="AssignedMechanic"></label>
-        <input asp-for="AssignedMechanic" class="form-control" />
+        <select asp-for="AssignedMechanic" class="form-control" asp-items="Model.AvailableMechanics"></select>
         <span asp-validation-for="AssignedMechanic" class="text-danger"></span>
     </div>
 
