@@ -1,8 +1,8 @@
 ﻿@model (Guid OrderId, List<Warsztat_samochodowy.Models.ServiceTaskModel> Tasks)
-<a asp-action="Create" asp-route-orderId="@Model.OrderId" class="btn btn-primary mb-3">Dodaj zadanie</a>
-
 
 <h2>Zadania do zlecenia</h2>
+
+<a asp-action="Create" asp-route-orderId="@Model.OrderId" class="btn btn-primary mb-3">Dodaj zadanie</a>
 
 @foreach (var task in Model.Tasks)
 {
