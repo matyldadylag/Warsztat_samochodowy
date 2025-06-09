@@ -8,9 +8,9 @@
 
 <form asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="AssignedMechanic"></label>
-        <input asp-for="AssignedMechanic" class="form-control" />
-        <span asp-validation-for="AssignedMechanic" class="text-danger"></span>
+        <label asp-for="AssignedMechanicId">Mechanik</label>
+        <select asp-for="AssignedMechanicId" asp-items="Model.AvailableMechanics" class="form-control"></select>
+        <span asp-validation-for="AssignedMechanicId" class="text-danger"></span>
     </div>
 
     <input type="hidden" asp-for="VehicleId" />

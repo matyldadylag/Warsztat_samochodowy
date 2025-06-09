@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Warsztat_samochodowy.Data;
 using Warsztat_samochodowy.DTOs;
@@ -9,10 +11,12 @@ namespace Warsztat_samochodowy.Controllers
     public class ServiceOrderController : Controller
     {
         private readonly WorkshopDbContext _context;
+        private readonly UserManager<ApplicationUserModel> _userManager;
 
-        public ServiceOrderController(WorkshopDbContext context)
+        public ServiceOrderController(WorkshopDbContext context, UserManager<ApplicationUserModel> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ServiceOrder
@@ -45,12 +49,21 @@ namespace Warsztat_samochodowy.Controllers
         }
 
         // GET: ServiceOrder/Create?vehicleId=...
-        public IActionResult Create(Guid vehicleId)
+        [HttpGet]
+        public async Task<IActionResult> Create(Guid vehicleId)
         {
+            var mechanics = await _userManager.GetUsersInRoleAsync("Mechanik");
+
             var dto = new ServiceOrderCreateDto
             {
-                VehicleId = vehicleId
+                VehicleId = vehicleId,
+                AvailableMechanics = mechanics.Select(m => new SelectListItem
+                {
+                    Value = m.Id,
+                    Text = m.Email // lub m.UserName, jak wolisz
+                })
             };
+
             return View(dto);
         }
 
@@ -60,14 +73,25 @@ namespace Warsztat_samochodowy.Controllers
         public async Task<IActionResult> Create(ServiceOrderCreateDto dto)
         {
             if (!ModelState.IsValid)
+            {
+                var mechanics = await _userManager.GetUsersInRoleAsync("Mechanik");
+                dto.AvailableMechanics = mechanics.Select(m => new SelectListItem
+                {
+                    Value = m.Id,
+                    Text = m.Email
+                });
+
                 return View(dto);
+            }
+
+            var selectedMechanic = await _userManager.FindByIdAsync(dto.AssignedMechanicId);
 
             var serviceOrder = new ServiceOrderModel
             {
                 Id = Guid.NewGuid(),
                 VehicleId = dto.VehicleId,
-                Status = ServiceOrderStatus.New,
-                AssignedMechanic = dto.AssignedMechanic,
+                Status = dto.Status,
+                AssignedMechanic = selectedMechanic?.Email ?? "(nieznany)", // lub .UserName
                 CreatedAt = DateTime.UtcNow,
                 Comments = new List<CommentModel>(),
                 Tasks = new List<ServiceTaskModel>()
@@ -76,8 +100,9 @@ namespace Warsztat_samochodowy.Controllers
             _context.ServiceOrders.Add(serviceOrder);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", "ServiceOrder", new { id = dto.VehicleId });
+            return RedirectToAction("Index");
         }
+
 
         // GET: ServiceOrder/Details/5
         public async Task<IActionResult> Details(Guid? id)
