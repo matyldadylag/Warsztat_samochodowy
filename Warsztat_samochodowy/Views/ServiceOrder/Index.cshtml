@@ -7,8 +7,23 @@
 <h2>@ViewData["Title"]</h2>
 
 <form asp-action="Index" method="get" class="form-inline mb-3">
-    <input type="text" name="searchString" class="form-control mr-2" placeholder="Szukaj zlecenia..." value="@Context.Request.Query["searchString"]" />
-    <button type="submit" class="btn btn-primary">Szukaj</button>
+
+    <select name="statusFilter" class="form-control mr-2">
+        <option value="">Wszystkie statusy</option>
+        @foreach (var status in Enum.GetValues(typeof(Warsztat_samochodowy.Models.ServiceOrderStatus)).Cast<Warsztat_samochodowy.Models.ServiceOrderStatus>())
+        {
+            <option value="@status" selected="@(Context.Request.Query["statusFilter"] == status.ToString() ? "selected" : null)">
+                @status
+            </option>
+        }
+    </select>
+
+    <input type="text" name="mechanicFilter" value="@Context.Request.Query["mechanicFilter"]" class="form-control mr-2" placeholder="Mechanik" />
+
+    <input type="date" name="dateFilter" value="@Context.Request.Query["dateFilter"]" class="form-control mr-2" />
+
+    <button type="submit" class="btn btn-primary">Filtruj</button>
+    <a asp-action="Index" class="btn btn-secondary ml-2">Wyczyść</a>
 </form>
 
 <table class="table table-striped">

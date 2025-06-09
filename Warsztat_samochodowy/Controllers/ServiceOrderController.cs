@@ -20,18 +20,26 @@ namespace Warsztat_samochodowy.Controllers
         }
 
         // GET: ServiceOrder
-        public async Task<IActionResult> Index(string? searchString)
+        public async Task<IActionResult> Index(string? statusFilter, string? mechanicFilter, DateTime? dateFilter)
         {
             ViewData["Title"] = "Wszystkie zlecenia";
 
             var query = _context.ServiceOrders.Include(o => o.Vehicle).AsQueryable();
 
-            if (!string.IsNullOrEmpty(searchString))
+            if (!string.IsNullOrEmpty(statusFilter) && Enum.TryParse<ServiceOrderStatus>(statusFilter, out var status))
             {
-                query = query.Where(o =>
-                    (o.AssignedMechanic != null && o.AssignedMechanic.Contains(searchString)) ||
-                    o.Vehicle.Make.Contains(searchString) ||
-                    o.Vehicle.Model.Contains(searchString));
+                query = query.Where(o => o.Status == status);
+            }
+
+            if (!string.IsNullOrEmpty(mechanicFilter))
+            {
+                query = query.Where(o => o.AssignedMechanic != null && o.AssignedMechanic.Contains(mechanicFilter));
+            }
+
+            if (dateFilter.HasValue)
+            {
+                var date = dateFilter.Value.Date;
+                query = query.Where(o => o.CreatedAt.Date == date);
             }
 
             var serviceOrders = await query
@@ -49,6 +57,7 @@ namespace Warsztat_samochodowy.Controllers
 
             return View(serviceOrders);
         }
+
 
         // GET: ServiceOrder/Create?vehicleId=...
         [HttpGet]
