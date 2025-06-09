@@ -22,6 +22,8 @@ namespace Warsztat_samochodowy.Controllers
         // GET: ServiceOrder
         public async Task<IActionResult> Index(string? searchString)
         {
+            ViewData["Title"] = "Wszystkie zlecenia";
+
             var query = _context.ServiceOrders.Include(o => o.Vehicle).AsQueryable();
 
             if (!string.IsNullOrEmpty(searchString))
@@ -222,6 +224,35 @@ namespace Warsztat_samochodowy.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Details), new { id = commentDto.ServiceOrderId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyOrders()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return Unauthorized();
+
+            ViewData["Title"] = "Moje zlecenia";
+
+            var email = user.Email;
+
+            var myOrders = await _context.ServiceOrders
+                .Where(o => o.AssignedMechanic == email)
+                .Include(o => o.Vehicle)
+                .Select(o => new ServiceOrderListDto
+                {
+                    Id = o.Id,
+                    Status = o.Status.ToString(),
+                    AssignedMechanic = o.AssignedMechanic,
+                    VehicleId = o.VehicleId,
+                    CreatedAt = o.CreatedAt,
+                    VehicleMake = o.Vehicle.Make,
+                    VehicleModel = o.Vehicle.Model
+                })
+                .ToListAsync();
+
+            return View("Index", myOrders);
         }
 
     }

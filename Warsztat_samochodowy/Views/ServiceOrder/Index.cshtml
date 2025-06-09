@@ -1,10 +1,10 @@
 ﻿@model List<Warsztat_samochodowy.DTOs.ServiceOrderListDto>
 
 @{
-    ViewData["Title"] = "Lista Zleceń Serwisowych";
+    ViewData["Title"] ??= "Zlecenia serwisowe";
 }
 
-<h2>Lista zleceń serwisowych</h2>
+<h2>@ViewData["Title"]</h2>
 
 <form asp-action="Index" method="get" class="form-inline mb-3">
     <input type="text" name="searchString" class="form-control mr-2" placeholder="Szukaj zlecenia..." value="@Context.Request.Query["searchString"]" />

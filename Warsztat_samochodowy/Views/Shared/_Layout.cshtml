@@ -35,6 +35,12 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="AdminRegister">Dodaj użytkownika</a>
                             </li>
                         }
+                        @if (User.IsInRole("Mechanik"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="ServiceOrder" asp-action="MyOrders">Moje zlecenia</a>
+                            </li>
+                        }
                     </ul>
 
                     <ul class="navbar-nav">
