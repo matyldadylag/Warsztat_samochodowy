@@ -18,11 +18,14 @@ namespace Warsztat_samochodowy.Controllers
         {
             var tasks = await _context.ServiceTasks
                 .Where(t => t.ServiceOrderId == orderId)
+                .Include(t => t.UsedParts)
+                    .ThenInclude(up => up.Part)
                 .OrderByDescending(t => t.Description)
                 .ToListAsync();
 
             return View((orderId, tasks));
         }
+
 
         [HttpGet]
         public IActionResult Create(Guid orderId)
@@ -31,19 +34,21 @@ namespace Warsztat_samochodowy.Controllers
             {
                 ServiceOrderId = orderId
             };
+
+            ViewBag.Parts = _context.Parts.ToList();
             return View(dto);
         }
-
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ServiceTaskCreateDto dto)
         {
             if (!ModelState.IsValid)
+            {
+                ViewBag.Parts = _context.Parts.ToList();
                 return View(dto);
+            }
 
-            // Znajdź zlecenie po ID, które przyszło z formularza
             var serviceOrder = await _context.ServiceOrders.FindAsync(dto.ServiceOrderId);
             if (serviceOrder == null)
                 return NotFound("Zlecenie nie istnieje.");
@@ -54,14 +59,24 @@ namespace Warsztat_samochodowy.Controllers
                 Description = dto.Description,
                 LaborCost = dto.LaborCost,
                 ServiceOrderId = dto.ServiceOrderId,
-                ServiceOrder = serviceOrder 
+                ServiceOrder = serviceOrder
             };
+
+            foreach (var partDto in dto.UsedParts)
+            {
+                task.UsedParts.Add(new UsedPartModel
+                {
+                    Id = Guid.NewGuid(),
+                    PartId = partDto.PartId,
+                    Quantity = partDto.Quantity,
+                    ServiceTaskId = task.Id
+                });
+            }
 
             _context.ServiceTasks.Add(task);
             await _context.SaveChangesAsync();
 
             return RedirectToAction("Index", new { orderId = dto.ServiceOrderId });
         }
-
     }
 }

@@ -8,7 +8,21 @@
 {
     <div class="border p-2 mb-2">
         <strong>Opis:</strong> @task.Description <br />
-        <strong>Koszt robocizny:</strong> @task.LaborCost zł
+        <strong>Koszt robocizny:</strong> @task.LaborCost zł <br />
+
+        <strong>Użyte części:</strong>
+        @if (task.UsedParts.Any())
+        {
+            <ul>
+                @foreach (var part in task.UsedParts)
+                {
+                    <li>@part.Part.Name – @part.Quantity × @part.Part.UnitPrice zł = @(part.Quantity * part.Part.UnitPrice) zł</li>
+                }
+            </ul>
+        }
+        else
+        {
+            <span>Brak części</span>
+        }
     </div>
 }
-

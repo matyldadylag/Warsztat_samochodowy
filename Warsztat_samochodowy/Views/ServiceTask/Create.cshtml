@@ -17,6 +17,23 @@
         <span asp-validation-for="LaborCost" class="text-danger"></span>
     </div>
 
+    <div id="parts-container">
+        <h4>Dodaj części</h4>
+        <div class="part-entry form-row mb-2">
+            <select name="UsedParts[0].PartId" class="form-control col-md-6">
+                @foreach (var part in (List<PartModel>)ViewBag.Parts)
+                {
+                    <option value="@part.Id">@part.Name (@part.UnitPrice zł)</option>
+                }
+            </select>
+            <input type="number" name="UsedParts[0].Quantity" class="form-control col-md-4 ml-2" min="1" value="1" />
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-sm btn-secondary mb-3" onclick="addPart()">Dodaj kolejną część</button>
+
+    <!-- 🔼 KONIEC części -->
+
     <button type="submit" class="btn btn-primary">Dodaj zadanie</button>
 </form>
 
@@ -24,4 +41,25 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+
+    <script>
+        let partIndex = 1;
+        function addPart() {
+            const container = document.getElementById('parts-container');
+            const partOptions = `@foreach (var part in (List<PartModel>)ViewBag.Parts)
+        {
+            <text><option value="@part.Id">@part.Name (@part.UnitPrice zł)</option></text>
+        }`;
+
+            const partHtml = `
+                <div class="part-entry form-row mb-2">
+                    <select name="UsedParts[${partIndex}].PartId" class="form-control col-md-6">
+                        ${partOptions}
+                    </select>
+                    <input type="number" name="UsedParts[${partIndex}].Quantity" class="form-control col-md-4 ml-2" min="1" value="1" />
+                </div>`;
+            container.insertAdjacentHTML('beforeend', partHtml);
+            partIndex++;
+        }
+    </script>
 }

@@ -1,0 +1,12 @@
+﻿@model Warsztat_samochodowy.Models.PartModel
+
+<h2>Czy na pewno usunąć?</h2>
+
+<p><strong>Nazwa:</strong> @Model.Name</p>
+<p><strong>Cena jednostkowa:</strong> @Model.UnitPrice zł</p>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Usuń</button>
+    <a asp-action="Index" class="btn btn-secondary">Anuluj</a>
+</form>

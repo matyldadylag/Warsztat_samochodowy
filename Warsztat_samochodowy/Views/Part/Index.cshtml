@@ -1,0 +1,27 @@
+﻿@model List<Warsztat_samochodowy.Models.PartModel>
+
+<h2>Lista części</h2>
+<a asp-action="Create" class="btn btn-primary mb-3">Dodaj nową część</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nazwa</th>
+            <th>Cena jednostkowa</th>
+            <th>Akcje</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var part in Model)
+        {
+            <tr>
+                <td>@part.Name</td>
+                <td>@part.UnitPrice zł</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@part.Id" class="btn btn-sm btn-warning">Edytuj</a>
+                    <a asp-action="Delete" asp-route-id="@part.Id" class="btn btn-sm btn-danger">Usuń</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

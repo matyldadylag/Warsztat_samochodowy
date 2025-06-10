@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Warsztat_samochodowy.DTOs;
 
 namespace Warsztat_samochodowy.Models
 {
@@ -14,5 +15,6 @@ namespace Warsztat_samochodowy.Models
         [Required]
         [Range(0, 1000000, ErrorMessage = "Koszt musi być większy lub równy 0")]
         public decimal LaborCost { get; set; }
+        public List<UsedPartCreateDto> UsedParts { get; set; } = new();
     }
 }
