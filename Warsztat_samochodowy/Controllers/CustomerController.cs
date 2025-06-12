@@ -2,6 +2,7 @@
 using Warsztat_samochodowy.Models;
 using Warsztat_samochodowy.Data;
 using Warsztat_samochodowy.DTOs;
+using Warsztat_samochodowy.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace Warsztat_samochodowy.Controllers
@@ -9,9 +10,12 @@ namespace Warsztat_samochodowy.Controllers
     public class CustomerController : Controller
     {
         private readonly WorkshopDbContext _context;
-        public CustomerController(WorkshopDbContext context)
+        private readonly CustomerMapper _mapper;
+
+        public CustomerController(WorkshopDbContext context, CustomerMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         public IActionResult Index(string searchString)
@@ -30,16 +34,7 @@ namespace Warsztat_samochodowy.Controllers
                     || c.PhoneNumber.Contains(searchString));
             }
 
-            var customers = query
-                .Select(c => new CustomerListDto
-                {
-                    Id = c.Id,
-                    FirstName = c.FirstName,
-                    LastName = c.LastName,
-                    Email = c.Email,
-                    PhoneNumber = c.PhoneNumber
-                })
-                .ToList();
+            var customers = query.ToList().Select(c => _mapper.ToListDto(c)).ToList();
 
             return View(customers);
         }
@@ -53,14 +48,8 @@ namespace Warsztat_samochodowy.Controllers
             if (!ModelState.IsValid)
                 return View(dto);
 
-            var customer = new CustomerModel
-            {
-                Id = Guid.NewGuid(),
-                FirstName = dto.FirstName,
-                LastName = dto.LastName,
-                Email = dto.Email,
-                PhoneNumber = dto.PhoneNumber
-            };
+            var customer = _mapper.ToModel(dto);
+            customer.Id = Guid.NewGuid();
 
             _context.Customers.Add(customer);
             _context.SaveChanges();
@@ -72,14 +61,7 @@ namespace Warsztat_samochodowy.Controllers
             var customer = _context.Customers.Find(id);
             if (customer == null) return NotFound();
 
-            var dto = new CustomerEditDto
-            {
-                Id = customer.Id,
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                Email = customer.Email,
-                PhoneNumber = customer.PhoneNumber
-            };
+            var dto = _mapper.ToEditDto(customer);
 
             return View(dto);
         }
@@ -93,10 +75,12 @@ namespace Warsztat_samochodowy.Controllers
             var customer = _context.Customers.Find(dto.Id);
             if (customer == null) return NotFound();
 
-            customer.FirstName = dto.FirstName;
-            customer.LastName = dto.LastName;
-            customer.Email = dto.Email;
-            customer.PhoneNumber = dto.PhoneNumber;
+            var updatedCustomer = _mapper.ToModel(dto);
+
+            customer.FirstName = updatedCustomer.FirstName;
+            customer.LastName = updatedCustomer.LastName;
+            customer.Email = updatedCustomer.Email;
+            customer.PhoneNumber = updatedCustomer.PhoneNumber;
 
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
@@ -121,14 +105,14 @@ namespace Warsztat_samochodowy.Controllers
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
-        // GET: Customer/Details/5
+
         public IActionResult Details(Guid? id)
         {
             if (id == null)
                 return NotFound();
 
             var customer = _context.Customers
-                .Include(c => c.Vehicles)  // ładowanie pojazdów klienta
+                .Include(c => c.Vehicles)
                 .FirstOrDefault(c => c.Id == id);
 
             if (customer == null)

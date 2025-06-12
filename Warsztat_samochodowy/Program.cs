@@ -20,6 +20,8 @@ builder.Services.AddIdentity<ApplicationUserModel, IdentityRole>()
     .AddEntityFrameworkStores<WorkshopDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddSingleton<Warsztat_samochodowy.Mappers.CustomerMapper>();
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
