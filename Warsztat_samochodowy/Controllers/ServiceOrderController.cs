@@ -283,5 +283,22 @@ namespace Warsztat_samochodowy.Controllers
             return View("Index", myOrders);
         }
 
+        [HttpGet]
+        public async Task<IActionResult> DownloadPdf(Guid id)
+        {
+            var order = await _context.ServiceOrders
+                .Include(o => o.Vehicle)
+                .Include(o => o.Tasks)
+                .Include(o => o.Comments)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (order == null)
+                return NotFound();
+
+            var pdfBytes = Reports.ServiceOrderReportGenerator.Generate(order);
+            var fileName = $"Zlecenie_{order.Id}.pdf";
+
+            return File(pdfBytes, "application/pdf", fileName);
+        }
     }
 }

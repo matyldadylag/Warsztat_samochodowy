@@ -6,12 +6,18 @@ using Warsztat_samochodowy.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using QuestPDF.Infrastructure;
+using Warsztat_samochodowy.Services;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var cultureInfo = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
 CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHostedService<MonthlyReportEmailSender>();
 
 builder.Services.AddDbContext<WorkshopDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

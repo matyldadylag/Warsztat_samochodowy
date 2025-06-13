@@ -15,7 +15,6 @@ namespace Warsztat_samochodowy.Controllers
             _context = context;
         }
 
-        // GET: Vehicle
         public IActionResult Index(string searchString)
         {
             var query = _context.Vehicles
@@ -24,7 +23,6 @@ namespace Warsztat_samochodowy.Controllers
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                // Rozbijamy searchString na słowa (np. "SeatAlhambra" -> ["SeatAlhambra"], albo "Seat Alhambra" -> ["Seat", "Alhambra"])
                 var searchParts = searchString.Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
                 query = query.Where(v =>
@@ -52,7 +50,6 @@ namespace Warsztat_samochodowy.Controllers
             return View(vehicles);
         }
 
-        // GET: Vehicle/Create?customerId=...
         public IActionResult Create(Guid customerId)
         {
             return View(new VehicleCreateDto { CustomerId = customerId });
@@ -68,13 +65,10 @@ namespace Warsztat_samochodowy.Controllers
             string? fileName = null;
             if (dto.ImageFile != null && dto.ImageFile.Length > 0)
             {
-                // wygeneruj unikalną nazwę pliku
                 fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.ImageFile.FileName);
 
-                // ścieżka do wwwroot/uploads
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
 
-                // zapisz plik na dysku
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     dto.ImageFile.CopyTo(stream);
@@ -97,7 +91,6 @@ namespace Warsztat_samochodowy.Controllers
             return RedirectToAction("Index", "Vehicle", new { id = dto.CustomerId });
         }
 
-        // GET: Vehicle/Edit/{id}
         public IActionResult Edit(Guid id)
         {
             var vehicle = _context.Vehicles.Find(id);
@@ -127,13 +120,10 @@ namespace Warsztat_samochodowy.Controllers
             string? fileName = null;
             if (dto.ImageFile != null && dto.ImageFile.Length > 0)
             {
-                // wygeneruj unikalną nazwę pliku
                 fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.ImageFile.FileName);
 
-                // ścieżka do wwwroot/uploads
                 var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
 
-                // zapisz plik na dysku
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     dto.ImageFile.CopyTo(stream);
@@ -154,8 +144,6 @@ namespace Warsztat_samochodowy.Controllers
 
             return RedirectToAction("Index", "Vehicle", new { id = dto.CustomerId });
         }
-
-        // GET: Vehicle/Delete/{id}
         public IActionResult Delete(Guid id)
         {
             var vehicle = _context.Vehicles
