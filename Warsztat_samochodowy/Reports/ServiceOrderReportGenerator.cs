@@ -24,9 +24,9 @@ namespace Warsztat_samochodowy.Reports
                         column.Item().Text($"Data utworzenia: {order.CreatedAt:yyyy-MM-dd HH:mm}");
                         column.Item().Text($"Status: {order.Status}");
                         column.Item().Text($"Mechanik: {order.AssignedMechanic ?? "(nieprzypisany)"}");
-                        column.Item().Text($"Pojazd: {order.Vehicle.Make} {order.Vehicle.Model}");
+                        column.Item().Text($"Pojazd: {order.Vehicle?.Make ?? "?"} {order.Vehicle?.Model ?? "?"}");
 
-                        if (order.Tasks.Any())
+                        if (order.Tasks?.Any() == true)
                         {
                             column.Item().Text("Zadania serwisowe:").Bold();
                             foreach (var task in order.Tasks)
@@ -35,7 +35,7 @@ namespace Warsztat_samochodowy.Reports
                             }
                         }
 
-                        if (order.Comments.Any())
+                        if (order.Comments?.Any() == true)
                         {
                             column.Item().Text("Komentarze:").Bold();
                             foreach (var comment in order.Comments)
@@ -55,5 +55,6 @@ namespace Warsztat_samochodowy.Reports
 
             return document.GeneratePdf();
         }
+
     }
 }

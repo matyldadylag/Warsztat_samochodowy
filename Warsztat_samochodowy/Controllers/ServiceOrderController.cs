@@ -279,10 +279,18 @@ namespace Warsztat_samochodowy.Controllers
             if (order == null)
                 return NotFound();
 
-            var pdfBytes = Reports.ServiceOrderReportGenerator.Generate(order);
-            var fileName = $"Zlecenie_{order.Id}.pdf";
-
-            return File(pdfBytes, "application/pdf", fileName);
+            try
+            {
+                var pdfBytes = Reports.ServiceOrderReportGenerator.Generate(order);
+                var fileName = $"Zlecenie_{order.Id}.pdf";
+                return File(pdfBytes, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Błąd generowania PDF: {ex}");
+                return RedirectToAction("Details", new { id });
+            }
         }
+
     }
 }
