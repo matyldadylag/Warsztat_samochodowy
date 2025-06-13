@@ -3,16 +3,21 @@ using Microsoft.EntityFrameworkCore;
 using Warsztat_samochodowy.Data;
 using Warsztat_samochodowy.Models;
 using Warsztat_samochodowy.DTOs;
+using Microsoft.Extensions.Logging;
 
 namespace Warsztat_samochodowy.Controllers
 {
     public class CommentController : Controller
     {
         private readonly WorkshopDbContext _context;
+        private readonly ILogger<CommentController> _logger;
 
-        public CommentController(WorkshopDbContext context)
+
+        public CommentController(WorkshopDbContext context, ILogger<CommentController> logger)
         {
             _context = context;
+            _logger = logger;
+
         }
 
         public async Task<IActionResult> Index(Guid orderId)
@@ -42,34 +47,43 @@ namespace Warsztat_samochodowy.Controllers
 
         public IActionResult Create(Guid orderId)
         {
-            var dto = new CommentCreateDto
-            {
-                ServiceOrderId = orderId
-            };
-            return View(dto);
+            return View(new CommentCreateDto { ServiceOrderId = orderId });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CommentCreateDto dto)
         {
+            _logger.LogError("TEST: To jest testowy błąd logowania NLog.");
+
             if (!ModelState.IsValid)
                 return View(dto);
 
-            var comment = new CommentModel
+            try
             {
-                Id = Guid.NewGuid(),
-                Author = dto.Author,
-                Content = dto.Content,
-                Timestamp = DateTime.UtcNow,
-                ServiceOrderId = dto.ServiceOrderId
-            };
+                var comment = new CommentModel
+                {
+                    Id = Guid.NewGuid(),
+                    Author = dto.Author,
+                    Content = dto.Content,
+                    Timestamp = DateTime.UtcNow,
+                    ServiceOrderId = dto.ServiceOrderId
+                };
 
-            _context.Comments.Add(comment);
-            await _context.SaveChangesAsync();
+                _context.Comments.Add(comment);
+                await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", new { orderId = dto.ServiceOrderId });
+                _logger.LogInformation("Dodano komentarz do zlecenia {OrderId} przez {Author}", dto.ServiceOrderId, dto.Author);
+
+                return RedirectToAction("Index", new { orderId = dto.ServiceOrderId });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Błąd przy dodawaniu komentarza do zlecenia {OrderId}", dto.ServiceOrderId);
+                return StatusCode(500);
+            }
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

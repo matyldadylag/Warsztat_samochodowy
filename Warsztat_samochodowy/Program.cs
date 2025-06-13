@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using QuestPDF.Infrastructure;
 using Warsztat_samochodowy.Services;
+using NLog;
+using NLog.Web;
+
 
 QuestPDF.Settings.License = LicenseType.Community;
 
@@ -15,7 +18,14 @@ var cultureInfo = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
 CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
+
+
 var builder = WebApplication.CreateBuilder(args);
+
+var logger = NLog.LogManager.Setup().LoadConfigurationFromFile("NLog.config").GetCurrentClassLogger();
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
+
 
 builder.Services.AddHostedService<MonthlyReportEmailSender>();
 
