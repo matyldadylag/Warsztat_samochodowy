@@ -14,7 +14,6 @@ namespace Warsztat_samochodowy.DTOs
         [Required]
         public ServiceOrderStatus Status { get; set; } = ServiceOrderStatus.New;
 
-        // Lista mechaników do wyboru w drop-down — tylko na potrzeby widoku
         public IEnumerable<SelectListItem>? AvailableMechanics { get; set; }
     }
 }

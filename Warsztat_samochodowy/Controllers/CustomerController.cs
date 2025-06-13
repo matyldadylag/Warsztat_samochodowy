@@ -34,7 +34,9 @@ namespace Warsztat_samochodowy.Controllers
                     || c.PhoneNumber.Contains(searchString));
             }
 
-            var customers = query.ToList().Select(c => _mapper.ToListDto(c)).ToList();
+            var customers = query.ToList()
+                .Select(c => _mapper.ToListDto(c))
+                .ToList();
 
             return View(customers);
         }
@@ -59,7 +61,8 @@ namespace Warsztat_samochodowy.Controllers
         public IActionResult Edit(Guid id)
         {
             var customer = _context.Customers.Find(id);
-            if (customer == null) return NotFound();
+            if (customer == null)
+                return NotFound();
 
             var dto = _mapper.ToEditDto(customer);
 
@@ -70,10 +73,12 @@ namespace Warsztat_samochodowy.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(CustomerEditDto dto)
         {
-            if (!ModelState.IsValid) return View(dto);
+            if (!ModelState.IsValid)
+                return View(dto);
 
             var customer = _context.Customers.Find(dto.Id);
-            if (customer == null) return NotFound();
+            if (customer == null)
+                return NotFound();
 
             var updatedCustomer = _mapper.ToModel(dto);
 
@@ -89,7 +94,8 @@ namespace Warsztat_samochodowy.Controllers
         public IActionResult Delete(Guid id)
         {
             var customer = _context.Customers.Find(id);
-            if (customer == null) return NotFound();
+            if (customer == null)
+                return NotFound();
 
             return View(customer);
         }
@@ -99,7 +105,8 @@ namespace Warsztat_samochodowy.Controllers
         public IActionResult DeleteConfirmed(Guid id)
         {
             var customer = _context.Customers.Find(id);
-            if (customer == null) return NotFound();
+            if (customer == null)
+                return NotFound();
 
             _context.Customers.Remove(customer);
             _context.SaveChanges();

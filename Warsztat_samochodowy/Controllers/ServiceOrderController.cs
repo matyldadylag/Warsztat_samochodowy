@@ -19,7 +19,6 @@ namespace Warsztat_samochodowy.Controllers
             _userManager = userManager;
         }
 
-        // GET: ServiceOrder
         public async Task<IActionResult> Index(string? statusFilter, string? mechanicFilter, DateTime? dateFilter)
         {
             ViewData["Title"] = "Wszystkie zlecenia";
@@ -57,9 +56,7 @@ namespace Warsztat_samochodowy.Controllers
 
             return View(serviceOrders);
         }
-    
 
-        // GET: ServiceOrder/Create?vehicleId=...
         [HttpGet]
         public async Task<IActionResult> Create(Guid vehicleId)
         {
@@ -71,14 +68,13 @@ namespace Warsztat_samochodowy.Controllers
                 AvailableMechanics = mechanics.Select(m => new SelectListItem
                 {
                     Value = m.Id,
-                    Text = m.Email // lub m.UserName, jak wolisz
+                    Text = m.Email
                 })
             };
 
             return View(dto);
         }
 
-        // POST: ServiceOrder/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ServiceOrderCreateDto dto)
@@ -102,7 +98,7 @@ namespace Warsztat_samochodowy.Controllers
                 Id = Guid.NewGuid(),
                 VehicleId = dto.VehicleId,
                 Status = dto.Status,
-                AssignedMechanic = selectedMechanic?.Email ?? "(nieznany)", // lub .UserName
+                AssignedMechanic = selectedMechanic?.Email ?? "(nieznany)",
                 CreatedAt = DateTime.UtcNow,
                 Comments = new List<CommentModel>(),
                 Tasks = new List<ServiceTaskModel>()
@@ -114,8 +110,6 @@ namespace Warsztat_samochodowy.Controllers
             return RedirectToAction("Index");
         }
 
-
-        // GET: ServiceOrder/Details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -131,7 +125,6 @@ namespace Warsztat_samochodowy.Controllers
                 return NotFound();
 
             return View(order);
-
         }
 
         public async Task<IActionResult> Edit(Guid? id)
@@ -152,7 +145,7 @@ namespace Warsztat_samochodowy.Controllers
                 Status = order.Status,
                 AvailableMechanics = mechanics.Select(m => new SelectListItem
                 {
-                    Value = m.Email, // lub m.Id — zależnie od tego, co masz w bazie
+                    Value = m.Email,
                     Text = m.Email,
                     Selected = m.Email == order.AssignedMechanic
                 })
@@ -194,8 +187,6 @@ namespace Warsztat_samochodowy.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-        // GET: ServiceOrder/Delete/5
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -210,7 +201,6 @@ namespace Warsztat_samochodowy.Controllers
             return View(order);
         }
 
-        // POST: ServiceOrder/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
@@ -224,18 +214,12 @@ namespace Warsztat_samochodowy.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ServiceOrderExists(Guid id)
-        {
-            return _context.ServiceOrders.Any(e => e.Id == id);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddComment(CommentCreateDto commentDto)
         {
             if (!ModelState.IsValid)
             {
-                // Przy błędzie wróć do Details i pokaż błędy (możesz też przekazać ModelState do widoku)
                 return RedirectToAction(nameof(Details), new { id = commentDto.ServiceOrderId });
             }
 

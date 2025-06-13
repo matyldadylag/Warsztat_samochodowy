@@ -15,7 +15,6 @@ namespace Warsztat_samochodowy.Controllers
             _context = context;
         }
 
-
         public async Task<IActionResult> Index(Guid orderId)
         {
             var order = await _context.ServiceOrders
@@ -36,11 +35,10 @@ namespace Warsztat_samochodowy.Controllers
                 })
                 .ToList();
 
-            ViewData["OrderId"] = order.Id; 
+            ViewData["OrderId"] = order.Id;
 
             return View(commentsDto);
         }
-
 
         public IActionResult Create(Guid orderId)
         {
@@ -86,7 +84,7 @@ namespace Warsztat_samochodowy.Controllers
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("Index", new { orderId = orderId });
+            return RedirectToAction("Index", new { orderId });
         }
     }
 }

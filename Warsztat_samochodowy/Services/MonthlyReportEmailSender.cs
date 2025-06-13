@@ -18,7 +18,6 @@ namespace Warsztat_samochodowy.Services
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            // Poczekaj chwilę po starcie aplikacji (np. 10 sek.)
             await Task.Delay(10000, stoppingToken);
 
             using var scope = _serviceProvider.CreateScope();

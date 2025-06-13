@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Warsztat_samochodowy.Models;
 using Warsztat_samochodowy.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Warsztat_samochodowy.Controllers
 {
@@ -28,7 +26,6 @@ namespace Warsztat_samochodowy.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AdminRegister()
         {
-            // Pobieramy nazwy ról z bazy i przekazujemy do widoku
             var roles = _roleManager.Roles.Select(r => r.Name).ToList();
             ViewBag.Roles = roles;
 
@@ -41,7 +38,6 @@ namespace Warsztat_samochodowy.Controllers
         {
             if (!ModelState.IsValid)
             {
-                // Gdy walidacja nie przejdzie, też musimy przekazać listę ról
                 ViewBag.Roles = _roleManager.Roles.Select(r => r.Name).ToList();
                 return View(model);
             }
@@ -66,7 +62,6 @@ namespace Warsztat_samochodowy.Controllers
             foreach (var error in result.Errors)
                 ModelState.AddModelError(string.Empty, error.Description);
 
-            // W przypadku błędów też zwracamy listę ról do widoku
             ViewBag.Roles = _roleManager.Roles.Select(r => r.Name).ToList();
 
             return View(model);
@@ -80,13 +75,15 @@ namespace Warsztat_samochodowy.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
 
             var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+
             if (result.Succeeded)
                 return RedirectToAction("Index", "Home");
 
-            ModelState.AddModelError("", "Nieprawidłowe dane logowania.");
+            ModelState.AddModelError(string.Empty, "Nieprawidłowe dane logowania.");
             return View(model);
         }
 

@@ -20,7 +20,6 @@ namespace Warsztat_samochodowy.Data
                 }
             }
 
-            // Dodaj admina
             var adminEmail = "admin@example.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
